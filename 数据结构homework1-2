@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//结构体的设计
+struct Employee
+{
+    char name[10];
+    char id[5];
+    char position[10];
+    char num[15];
+};
+int main()
+{
+    struct Employee emp[10];
+    int i;
+    for(i=0; i<3; i++){
+        scanf("%s %s %s %s", emp[i].name, emp[i].id, emp[i].position, emp[i].num);
+    }
+    for(i=0; i<3; i++){//左对齐-
+        printf("%-10s %-5s %-10s %-15s\n", emp[i].name, emp[i].id, emp[i].position, emp[i].num);
+    }
+
+    return 0;
+}
