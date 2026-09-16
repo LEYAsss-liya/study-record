@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+//定义链表节点结构体（重要）
+typedef struct Node
+{
+    int data;
+    struct Node *next;
+}Node, *LinkList;
+
+//创建一个新结点
+Node* createNode(int num)
+{
+    Node* p = (Node*)malloc(sizeof(Node)); //在内存里面申请一块空间，建造一节新车厢
+    p->data = num; //把要传入的数字放进车厢
+    p->next = NULL; //新车厢暂时没有下家
+    return p; //返回这个新车厢的地址
+}
+
+//尾插法建立链表
+Node* buildList(int n)
+{
+    Node* head = NULL;
+    Node* tail = NULL;
+    int a;
+    for(int i=0; i<n; i++){
+        scanf("%d", &a);
+        Node* newnode = createNode(a);
+        if(head==NULL){
+            head = newnode;
+            tail = newnode;
+        }
+        else{
+            tail->next = newnode;
+            tail = newnode;
+        }
+    }
+    return head;
+}
+
+//选择排序
+void choosesortList(Node* head, int n)
+{
+    Node* p = head;
+    for(int i=0; i<n-1; i++){
+        Node* min = p;
+        Node* q = p->next;//用q向后查找扫描
+        while(q != NULL){
+            if(q->data < min->data){
+                min = q;
+            }
+            q = q->next;
+        }
+        int temp = p->data;
+        p->data = min->data;
+        min->data = temp;
+        p = p->next;
+    }
+}
+//打印所有元素
+void printList(Node* head)
+{
+    Node* b = head;
+    while(b != NULL){
+        printf("%d ", b->data);
+        b = b->next;
+    }
+}
+int main()
+{
+    Node* head;
+    head = buildList(10);
+    choosesortList(head, 10);
+    printList(head);
+
+    return 0;
+}
