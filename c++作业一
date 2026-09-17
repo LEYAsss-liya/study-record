@@ -1,0 +1,207 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+
+namespace ID25531643{
+    struct STUDENT{
+        int id;
+        char name[50];
+        char major[50];
+        int score;
+    };
+
+    void ensureCapacity(STUDENT*& arr, int count, int& capacity, int need)
+    {
+        if(need<=capacity){
+            return;
+        }
+        else{
+            int newCapacity = (capacity == 0 ? 2 : capacity);
+            while(need>newCapacity){
+                newCapacity = newCapacity + 1;
+            }
+            STUDENT* newArr = new STUDENT[newCapacity];
+            for(int i=0; i<count; i++){
+                newArr[i] = arr[i];
+            }
+            delete[] arr;
+            arr = newArr;
+            capacity = newCapacity;
+
+        }
+    }
+
+    void copyStudent(char* dest, const char* src, int size)
+    {
+        if(size <= 0){
+            return;
+        }
+        else{
+            int i=0;
+            while(( i<size-1) && (src[i] != '\0')){
+                dest[i] = src[i];
+                i++;
+            }
+            dest[i] = '\0';
+        }
+
+    }
+
+    void addStudent(STUDENT*& arr, int& count, int capacity)
+    {
+        ensureCapacity(arr, count, capacity, count+1);
+        STUDENT x;
+        cout << "请输入学号: ";
+        cin >> x.id;
+        cout << "请输入姓名: ";
+        cin >> setw(50) >> x.name;
+        cout << "请输入专业: ";
+        cin >> setw(50) >> x.major;
+        cout << "请输入分数: ";
+        cin >> x.score;
+        arr[count] = x;
+        count++;
+        cout << "录入成功: \n";
+    }
+
+    void addStudent(STUDENT*& arr, int& count, int& capacity, int id, const char* name, const char* major, int score)
+    {
+        ensureCapacity(arr, count, capacity, count+1);
+        STUDENT x;
+        x.id = id;
+        copyStudent(x.name, name, 50);
+        copyStudent(x.major, major, 50);
+        x.score = score;
+        arr[count] = x;
+        count++;
+        cout << "录入成功: \n";
+    }
+
+    void deleteStudent(STUDENT*& arr, int& count, int id)
+    {
+        int j=0;
+        for(int i=0; i<count; i++){
+            if(arr[i].id == id){
+                i = j;
+            }
+            break;
+        }
+            for(int i=j; i<count; i++){
+                arr[i] = arr[i+1];
+            }
+        count--;
+    }
+
+    void showStudent(const STUDENT& x)
+    {
+        cout << left << setw(10) << x.id << setw(10) << x.name << setw(10) << x.major << setw(10) << x.score << '\n';
+    }
+
+    void showStudents(const STUDENT* arr, int count)
+    {
+        if(count == 0){
+            cout << "当前无数据: ";
+            return;
+        }
+        else{
+            cout << left << setw(10) << "学号" << setw(10) << "姓名" << setw(10) << "专业" << setw(10) << "平均分" << '\n';
+        }
+        for(int i=0; i<count; i++){
+            showStudent(arr[i]);
+        }
+    }
+
+    void showStudents(const STUDENT* arr, int count, int min, int max = 100)
+    {
+        if(count == 0){
+            cout << "当前无数据 " << '\n';
+            return;
+        }
+        else{
+            cout << "成绩在范围内的学生: " << '\n';
+            cout << left << setw(10) << "学号" << setw(10) << "姓名" << setw(10) << "专业" << setw(10) << "平均分" << '\n';
+        }
+        int p = 0;
+        for(int i=0; i<count; i++){
+            if(arr[i].score >= min && arr[i].score <= max){
+                showStudent(arr[i]);
+                p = 1;
+            }
+        }
+        if(p==0){
+            cout << "无" << '\n';
+        }
+    }
+
+    void manu()
+    {
+        cout << "学生信息保存系统" << '\n';
+        cout << "选1录入学生信息"  << '\n';
+        cout << "选2录入全部学生信息" << '\n';
+        cout << "选3删除学生信息" << '\n';
+        cout << "选4显示全部学生信息" << '\n';
+        cout << "选5显示成绩区间内的学生信息" << '\n';
+        cout << "选0退出系统" << '\n';
+        cout << "请输入: ";
+    }
+
+    void run()
+    {
+        STUDENT* student = nullptr;
+        int count = 0;
+        int capacity = 0;
+        ensureCapacity(student, count, capacity, count+1);
+        int choice = -1;
+        do{
+            manu();
+            cin >> choice;
+            switch(choice){
+                case 1:
+                    addStudent(student,  count,  capacity);
+                    break;
+                case 2:{
+                    int id, score;
+                    char name[50], major[50];
+                    cout << "请输入学号: ";
+                    cin >> id;
+                    cout << "请输入姓名: ";
+                    cin >> name;
+                    cout << "请输入专业: ";
+                    cin >> major;
+                    cout << "请输入平均分: ";
+                    cin >> score;
+                    addStudent(student, count, capacity, id, name, major, score);
+                    break;
+                }
+                case 3:
+                    int id;
+                    cout << "请输入要删除的学号: ";
+                    cin >> id;
+                    deleteStudent(student,  count,  id);
+                    break;
+                case 4:
+                    showStudents(student, count);
+                    break;
+                case 5:{
+                    int min, max=100;
+                    cout << "请输入最低分: ";
+                    cin >> min;
+                    showStudents(student, count, min);
+                    break;
+                }
+                case 0:
+                    break;
+                default:
+                    cout << "输入无效，请重新输入" << '\n';
+            }
+        }while(choice != 0);
+        delete[] student;
+        student = nullptr;
+    }
+}
+int main()
+{
+   ID25531643::run();
+    return 0;
+}
